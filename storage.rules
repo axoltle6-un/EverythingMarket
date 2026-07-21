@@ -1,0 +1,26 @@
+rules_version = '2';
+
+// Cloud Storage Security Rules — Everything Market
+// Deploy:  firebase deploy --only storage
+//   or paste into: Firebase Console > Storage > Rules
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // A user can manage ONLY files under their own folder.
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Public, read-only assets (e.g. shared logos/icons).
+    match /public/{allPaths=**} {
+      allow read:  if true;
+      allow write: if false;
+    }
+
+    // Deny everything else.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
