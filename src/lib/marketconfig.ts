@@ -15,5 +15,6 @@
 
 const env = ((import.meta as any).env ?? {}) as Record<string, string | undefined>;
 
-export const FINNHUB_API_KEY: string = env.VITE_FINNHUB_KEY ?? "PASTE_FINNHUB_KEY";
-export const finnhubReady = FINNHUB_API_KEY !== "PASTE_FINNHUB_KEY";
+// Finnhub free-tier key (verified working). Override with VITE_FINNHUB_KEY if needed.
+export const FINNHUB_API_KEY: string = env.VITE_FINNHUB_KEY ?? "d9fjg41r01qu5nheogj0d9fjg41r01qu5nheogjg";
+export const finnhubReady = FINNHUB_API_KEY.length > 12;
