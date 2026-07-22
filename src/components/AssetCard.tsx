@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import type { Asset } from "../lib/data";
-import { usePrice } from "../store";
+import { usePrice, useIsLive } from "../store";
 import { genPriceSeries, fmtPrice } from "../lib/format";
 import { AssetTile, ChangeChip, MarketDot } from "./ui";
 import { Sparkline } from "./Sparkline";
@@ -11,6 +11,7 @@ import { useStore } from "../store";
 export function AssetCard({ asset, index = 0 }: { asset: Asset; index?: number }) {
   const { price, change } = usePrice(asset.id);
   const openAsset = useStore((s) => s.openAsset);
+  const isLive = useIsLive(asset.id);
   const positive = change >= 0;
 
   const spark = useMemo(
@@ -38,7 +39,14 @@ export function AssetCard({ asset, index = 0 }: { asset: Asset; index?: number }
             <div className="truncate text-[12px] text-white/45">{asset.name}</div>
           </div>
         </div>
-        <MarketDot status={asset.status} />
+        <div className="flex items-center gap-1.5">
+          {isLive && (
+            <span className="inline-flex items-center gap-1 rounded-md bg-gain/12 px-1.5 py-0.5 text-[10px] font-semibold text-gain">
+              <span className="h-1 w-1 rounded-full bg-gain" /> LIVE
+            </span>
+          )}
+          <MarketDot status={asset.status} />
+        </div>
       </div>
 
       <div className="mt-4 flex items-end justify-between gap-2">

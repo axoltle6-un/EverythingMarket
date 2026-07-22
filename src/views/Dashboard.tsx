@@ -7,6 +7,7 @@ import { COMPANY_COUNT, PREVIEW_COMPANIES, colorFor } from "../lib/universe";
 import { fmtPrice, fmtPct, fmtCompact, timeAgo } from "../lib/format";
 import { Button, SectionHeader, Card, AssetTile, ChangeChip, Badge, Monogram } from "../components/ui";
 import { AssetCard } from "../components/AssetCard";
+import { TopCrypto } from "../components/TopCrypto";
 import { MarketTicker } from "../components/MarketTicker";
 import { Heatmap } from "../components/Heatmap";
 import { Sparkline } from "../components/Sparkline";
@@ -277,6 +278,11 @@ export function Dashboard() {
             ))}
           </div>
         </div>
+      </Reveal>
+
+      {/* Top crypto (real CoinGecko data) */}
+      <Reveal>
+        <TopCrypto limit={24} />
       </Reveal>
 
       {/* Trending */}

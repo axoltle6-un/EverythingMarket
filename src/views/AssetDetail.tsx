@@ -68,6 +68,7 @@ export function AssetDetail() {
     let active = true;
     (async () => {
       if (!finnhubReady) return;
+      if (useStore.getState().realIds.has(asset.id)) return; // already live
       const sym = quoteSymbolFor(asset.id, asset.symbol);
       if (!sym) return;
       const u = await refreshQuote(sym);

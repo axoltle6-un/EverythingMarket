@@ -17,7 +17,7 @@ import { Insights } from "./views/Insights";
 import { LandingPage } from "./views/LandingPage";
 import { useAuth } from "./lib/auth";
 import { usePrefs } from "./lib/prefs";
-import { refreshRealPrices } from "./lib/pricedata";
+import { refreshRealPrices, fetchCryptoMarkets } from "./lib/pricedata";
 import { AuthModal } from "./components/AuthModal";
 import { SettingsModal } from "./components/SettingsModal";
 import { NotificationsPanel } from "./components/NotificationsPanel";
@@ -123,9 +123,15 @@ export default function App() {
     let active = true;
     const run = async () => {
       n++;
-      const updates = await refreshRealPrices(n % 5 === 1);
+      const [updates, coins] = await Promise.all([
+        refreshRealPrices(n % 5 === 1),
+        fetchCryptoMarkets(60),
+      ]);
       if (active && updates && Object.keys(updates).length) {
         useStore.getState().applyReal(updates);
+      }
+      if (active && coins && coins.length) {
+        useStore.getState().setLiveCrypto(coins);
       }
     };
     run();

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { assets, defaultWatchlists } from "./lib/data";
 import { universeLive } from "./lib/universe";
+import type { CoinMarket } from "./lib/pricedata";
 
 export type View =
   | "dashboard"
@@ -72,6 +73,8 @@ interface State {
 
   realIds: Set<string>;
   applyReal: (updates: Record<string, { price: number; change: number; changeAbs: number }>) => void;
+  liveCrypto: CoinMarket[];
+  setLiveCrypto: (c: CoinMarket[]) => void;
   liveTick: () => void;
 }
 
@@ -96,6 +99,7 @@ export const useStore = create<State>((set, get) => ({
   activeWatchlistId: defaultWatchlists[0].id,
   live: initLive(),
   realIds: new Set<string>(),
+  liveCrypto: [],
   alertPrice: {},
   sidebarOpen: false,
   toasts: [],
@@ -198,6 +202,8 @@ export const useStore = create<State>((set, get) => ({
       return { live, realIds };
     }),
 
+  setLiveCrypto: (c) => set({ liveCrypto: c }),
+
   liveTick: () =>
     set((s) => {
       const next: Record<string, Live> = {};
@@ -224,4 +230,8 @@ export const useStore = create<State>((set, get) => ({
 export function usePrice(id: string): Live {
   const l = useStore((s) => s.live[id]);
   return l ?? universeLive(id) ?? { price: 0, change: 0, changeAbs: 0 };
+}
+
+export function useIsLive(id: string): boolean {
+  return useStore((s) => s.realIds.has(id));
 }
